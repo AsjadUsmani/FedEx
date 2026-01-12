@@ -71,7 +71,7 @@ export const assignCase = async (req, res) => {
     }
     const updated = result.rows[0];
 
-    await db.query(
+    await pool.query(
       `INSERT INTO case_logs (case_id, action, done_by, remarks)
        VALUES ($1, $2, $3, $4)`,
       [
@@ -100,7 +100,7 @@ export const updateCaseStatus = async (req, res) => {
 
   try {
     // Ensure this case belongs to this DCA
-    const check = await db.query(
+    const check = await pool.query(
       `SELECT id FROM cases WHERE id = $1 AND assigned_dca = $2`,
       [caseId, req.user.dcaId]
     );
@@ -109,7 +109,7 @@ export const updateCaseStatus = async (req, res) => {
       return res.status(403).json({ error: "Access denied to this case" });
     }
 
-    const result = await db.query(
+    const result = await pool.query(
       `UPDATE cases
        SET status = $1, updated_at = NOW()
        WHERE id = $2
@@ -119,7 +119,7 @@ export const updateCaseStatus = async (req, res) => {
 
     const updated = result.rows[0];
 
-    await db.query(
+    await pool.query(
       `INSERT INTO case_logs (case_id, action, done_by, remarks)
        VALUES ($1, $2, $3, $4)`,
       [updated.id, "STATUS_UPDATED", req.user.userId, remarks || ""]
