@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 import authRoutes from "./routes/auth.routes.js";
+import caseRoutes from "./routes/case.routes.js";
 
 dotenv.config();
 const app = express();
@@ -20,5 +21,6 @@ app.get("/health", (req, res) => {
   res.json({ status: "OK", message: "DCA Platform API running" });
 });
 app.use("/auth", authRoutes);
+app.use('/cases', caseRoutes)
 
 export default app
