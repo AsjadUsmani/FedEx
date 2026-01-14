@@ -61,7 +61,12 @@ export const assignCase = async (req, res) => {
   try {
     const result = await pool.query(
       `UPDATE cases
-       SET assigned_dca = $1, status = 'ASSIGNED', updated_at = NOW()
+       SET assigned_dca = $1,
+           status = 'ASSIGNED',
+           assigned_at = NOW(),
+           last_update_at = NOW(),
+           sla_deadline = NOW() + INTERVAL '48 hours',
+           updated_at = NOW()
        WHERE id = $2
        RETURNING *`,
       [dca_id, caseId]
@@ -111,7 +116,9 @@ export const updateCaseStatus = async (req, res) => {
 
     const result = await pool.query(
       `UPDATE cases
-       SET status = $1, updated_at = NOW()
+       SET status = $1, 
+           last_update_at = NOW(),
+           updated_at = NOW()
        WHERE id = $2
        RETURNING *`,
       [status, caseId]
