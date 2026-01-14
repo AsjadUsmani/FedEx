@@ -21,7 +21,7 @@ const startEscalation = () => {
         await pool.query(
           `
           UPDATE cases
-          SET status = 'ESCALATED', updated_at = NOW()
+          SET status = 'ESCALATED', last_update_at = NOW(), updated_at = NOW()
           WHERE id = $1
           `,
           [caseId]
